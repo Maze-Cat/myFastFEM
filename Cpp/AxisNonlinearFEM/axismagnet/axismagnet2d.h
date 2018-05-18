@@ -1,4 +1,4 @@
-#ifndef AXISMAGNET2D_H
+﻿#ifndef AXISMAGNET2D_H
 #define AXISMAGNET2D_H
 #include "datatype.h"
 
@@ -6,6 +6,7 @@ class AxisMagnet2D
 {
 public:
     AxisMagnet2D();
+    ~AxisMagnet2D();
 
     bool loadCOMSOLmeshfile(const char fn[]);
     bool NewtonSolve();

@@ -18,7 +18,7 @@ maxDM = max(DM);
 for i=minDM:maxDM
     p = find(DM == i);
     for j=1:length(p)
-        fill(xy(TR(p(j),:),1),xy(TR(p(j),:),2),[i/maxDM i*0/maxDM i*0/maxDM]);
+        fill(xy(TR(p(j),:),1),xy(TR(p(j),:),2),[i*0.8/maxDM i*1/maxDM i*1/maxDM]);
         hold on
     end
 end

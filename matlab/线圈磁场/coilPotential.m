@@ -2,10 +2,10 @@
 %By Yuchen Yang
 %3/6/2018
 %求解每个单元
+tic
 clear all
 close all
-fname = ['coilmesh.mphtxt'];
-
+fname = ['coilmesh1.mphtxt'];
 [xy,TR,DM] = readComsol(fname);
 
 num_elements = length(TR);
@@ -58,25 +58,10 @@ end
 %查找非边界点
 A = zeros(num_nodes,1);
 freenodes = find(abs(z1)~=1 & abs(z2)~=1)
-A(freenodes) = S(freenodes,freenodes)\F(freenodes);
+A(freenodes) = S(freenodes,freenodes)\ F(freenodes);
+toc
 
-%matlab绘图
-
-Z = scatteredInterpolant(z1,z2,A);
-tx = -1:1e-3:1;
-ty = -1:1e-3:1;
-[qx,qy] = meshgrid(tx,ty);
-qz = Z(qx,qy); 
-figure
-subplot(1,2,2);
-hold on
-title('MATLAB');
-contourf(qx,qy,qz,20);colorbar
-axis equal
-
-%COMSOL绘图
-
-fp = fopen('comsoldata.txt','r');
+fp = fopen('comsoldata1.txt','r');
 
 for i=1:9
     fgets(fp);
@@ -86,13 +71,48 @@ data = fscanf(fp,'%lf %lf %lf\n',[3,num_nodes]);
 data = data';
 fclose(fp);
 
-Z = scatteredInterpolant(data(:,1),data(:,2),data(:,3));
-tx = -1:1e-3:1;
-ty = -1:1e-3:1;
-[qx,qy] = meshgrid(tx,ty);
-qz = Z(qx,qy);
-subplot(1,2,1);
-contourf(qx,qy,qz,20);colorbar
-title('COMSOL');
-hold on
-axis equal
+B = data(:,3);
+
+C = B-A;
+D = mean(C);
+
+
+
+% %matlab绘图
+% 
+% Z = scatteredInterpolant(z1,z2,A);
+% tx = -1:1e-3:1;
+% ty = -1:1e-3:1;
+% [qx,qy] = meshgrid(tx,ty);
+% qz = Z(qx,qy); 
+% figure
+% subplot(1,2,2);
+% hold on
+% title('MATLAB');
+% contourf(qx,qy,qz,20);colorbar
+% axis equal
+% 
+% toc
+% 
+% %COMSOL绘图
+% 
+% fp = fopen('comsoldata.txt','r');
+% 
+% for i=1:9
+%     fgets(fp);
+% end
+% 
+% data = fscanf(fp,'%lf %lf %lf\n',[3,num_nodes]);
+% data = data';
+% fclose(fp);
+% 
+% Z = scatteredInterpolant(data(:,1),data(:,2),data(:,3));
+% tx = -1:1e-3:1;
+% ty = -1:1e-3:1;
+% [qx,qy] = meshgrid(tx,ty);
+% qz = Z(qx,qy);
+% subplot(1,2,1);
+% contourf(qx,qy,qz,20);colorbar
+% title('COMSOL');
+% hold on
+% axis equal
