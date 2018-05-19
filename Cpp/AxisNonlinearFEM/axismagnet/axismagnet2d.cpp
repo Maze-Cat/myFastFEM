@@ -28,7 +28,7 @@ bool AxisMagnet2D::loadCOMSOLmeshfile(const char fn[])
     fp = fopen(fn,"r");
     if (fp == NULL) {
         qDebug() << "Error: openning file!";
-        return -1;
+        return 1;
     }
 
     //-------------jump first 18 lines--------
@@ -38,17 +38,21 @@ bool AxisMagnet2D::loadCOMSOLmeshfile(const char fn[])
     }
     if(fscanf(fp,"%d # number of mesh points\n",&num_point) != 1){
         qDebug() << "Error:Can't read number of mesh points";
+        return 1;
     }
     pnode =(CNode*)calloc(num_point, sizeof(CNode));
     int low_pt;
     if(fscanf(fp,"%d # lowest mesh point index\n",&low_pt) != 1){
         qDebug() << "Error:Can't read lowest mesh point index";
+        return 1;
     }
+    fgets(ch, 256, fp);
 
     //-------------get mesh coordinates-------
     for(int i=low_pt;i<num_point;i++){
         if(fscanf(fp, "%lf %lf \n", &pnode[i].x, &pnode[i].y) != 2){
             qDebug() <<"Error:Can't read mesh coordinates";
+            return 1;
         }
 
     }
@@ -60,7 +64,10 @@ bool AxisMagnet2D::loadCOMSOLmeshfile(const char fn[])
     int vrt_ele;
     if(fscanf(fp,"%d # number of elements\n", &vrt_ele) != 1){
         qDebug() <<"Error:Can't read vertex";
+        return 1;
     }
+    fgets(ch, 256, fp);
+
     for(int i=0;i<vrt_ele;i++){
         fgets(ch,256,fp);
     }
@@ -70,7 +77,9 @@ bool AxisMagnet2D::loadCOMSOLmeshfile(const char fn[])
     int vrt_ind;
     if(fscanf(fp,"%d # number of geometric entity indices\n", &vrt_ind) != 1){
         qDebug() <<"Error:Can't read vertex2";
+        return 1;
     }
+    fgets(ch, 256, fp);
 
     for(int i=0;i<vrt_ind;i++){
         fgets(ch,256,fp);
@@ -85,17 +94,22 @@ bool AxisMagnet2D::loadCOMSOLmeshfile(const char fn[])
     int edg_ele;
     if(fscanf(fp,"%d # number of elements\n", &edg_ele) != 1){
         qDebug() <<"Error:Can't read edge";
+        return 1;
     }
+    fgets(ch, 256, fp);
     for(int i=0;i<edg_ele;i++){
         fgets(ch,256,fp);
     }
+
 
     //-------------edge-----------------------
 
     int edg_ind;
     if(fscanf(fp,"%d # number of geometric entity indices\n", &edg_ind) != 1){
         qDebug() <<"Error:Can't read edge2";
+        return 1;
     }
+    fgets(ch, 256, fp);
 
     for(int i=0;i<edg_ind;i++){
         fgets(ch,256,fp);
@@ -109,31 +123,36 @@ bool AxisMagnet2D::loadCOMSOLmeshfile(const char fn[])
 
     if(fscanf(fp,"%d # number of elements\n",&num_element) != 1){
         qDebug() << "Error:Can't read number of gllobal number";
+        return 1;
     }
     pelement =(CElementT3*)calloc(num_element, sizeof(CElementT3));
-
+    fgets(ch, 256, fp);
     for(int i=0;i<num_element;i++){
         if(fscanf(fp, "%d %d %d \n", &pelement[i].n[0], &pelement[i].n[1], &pelement[i].n[2]) != 3){
             qDebug() <<"Error:Can't read mesh coordinates";
+            return 1;
         }
 
     }
+
     //-------------domain---------------------
 
     int tri_ind;
-    if(fscanf(fp,"%d # number of geometric entity indices\n",&tri_ind)){
+    if(fscanf(fp,"%d # number of geometric entity indices\n",&tri_ind) != 1){
         qDebug()<<"Error:Can't read domain";
+        return 1;
     }
-
+    fgets(ch, 256, fp);
     for(int i=0;i<tri_ind;i++){
         if(fscanf(fp,"%d",&pelement[i].domain) != 1){
             qDebug()<<"Error:Can't read domain2";
+            return 1;
         }
     }
     //------------close file------------------
     fclose(fp);
     fp = NULL;
-    return 0;
+    return true;
 
 
 }

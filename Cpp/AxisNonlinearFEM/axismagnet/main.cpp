@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
     w.show();
 
     AxisMagnet2D fem;
-    fem.loadCOMSOLmeshfile("..\\model_normal.mphtxt");
+    fem.loadCOMSOLmeshfile("/Users/yuchenyang/Desktop/Final Thesis/myFastFEM/Cpp/AxisNonlinearFEM/axismagnet/model_normal.mphtxt");
 
     return a.exec();
 }
